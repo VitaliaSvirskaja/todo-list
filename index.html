@@ -26,7 +26,7 @@
         </ul>
     </div>
     <div class="content-container">
-        <button>+</button>
+        <button class="createBtn">+</button>
     </div>
 </main>
 
@@ -44,28 +44,41 @@
 </template>
 
 
-<template id="create-todo">
-    <div>New task</div>
-    <form>
-        <label for="title">Title:</label>
-        <input type="text" id="title" required>
-        <label for="description">Description:</label>
-        <input type="text" id="description" required>
-        <label for="duedate">Due Date:</label>
-        <input type="date" id="duedate">
-        <label for="priority">Priority:</label>
-        <select name="priority" id="priority">
-            <option value="low">Low</option>
-            <option value="medium">Medium</option>
-            <option value="high">High</option>
-        </select>
-        <label for="project">Project:</label>
-        <select name="project" id="project">
+<dialog>
+    <form method="dialog">
+        <div>New task</div>
+        <div>
+            <label for="title">Title:</label>
+            <input type="text" id="title" required>
+        </div>
 
-        </select>
-
+        <div>
+            <label for="description">Description:</label>
+            <input type="text" id="description" required>
+        </div>
+       <div>
+           <label for="duedate">Due Date:</label>
+           <input type="date" id="duedate">
+       </div>
+        <div>
+            <label for="priority">Priority:</label>
+            <select name="priority" id="priority">
+                <option value="low">Low</option>
+                <option value="medium">Medium</option>
+                <option value="high">High</option>
+            </select>
+        </div>
+      <div>
+          <label for="project">Project:</label>
+          <select name="project" id="project">
+              <option value="default" selected>Choose a project</option>
+              <option value="today">Today</option>
+          </select>
+      </div>
     </form>
-</template>
+</dialog>
+
+<div id="overlay"></div>
 <script type="module" src="/src/main.ts"></script>
 </body>
 </html>

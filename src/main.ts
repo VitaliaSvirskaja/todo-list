@@ -1,8 +1,10 @@
 import "./style.css";
+import { createTodo } from "./create-todo";
 
-interface ToDo {
-  title: string;
-  description: string;
-  dueDate: Date;
-  priority: "low" | "medium" | "high";
-}
+createTodo();
+// interface Todoo {
+//   title: string;
+//   description: string;
+//   dueDate: Date;
+//   priority: "low" | "medium" | "high";
+// }
