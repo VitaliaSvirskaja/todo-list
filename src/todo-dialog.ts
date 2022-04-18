@@ -1,4 +1,4 @@
-import "./create-to-do.css";
+import "./todo-dialog.css";
 
 const dialog = document.querySelector("dialog");
 const mainElement = document.querySelector("#overlay");
@@ -11,14 +11,14 @@ function changeOverlay(string: "none" | "block") {
   overlay.style.display = string;
 }
 
-function showOverlay() {
+export function showOverlay() {
   changeOverlay("block");
 }
-function hideOverlay() {
+export function hideOverlay() {
   changeOverlay("none");
 }
 
-export function createTodo() {
+export function createToDoDialog() {
   const createBtn = document.querySelector(".createBtn");
   createBtn?.addEventListener("click", () => {
     dialog?.setAttribute("open", "");
