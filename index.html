@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dosis:wght@200;300&family=Square+Peg&display=swap"
+          rel="stylesheet">
+    <title>ToDo</title>
+</head>
+<body>
+<header>
+    <div class="logo">
+        <img src="/images/logo.png" alt="logo" class="logo-img">
+        <p>ToDo</p>
+    </div>
+</header>
+<main>
+    <div class="sidebar">
+        <ul>
+            <li>Inbox</li>
+            <li>Today</li>
+            <li>Projects</li>
+        </ul>
+    </div>
+    <div class="content-container">
+        <button>+</button>
+    </div>
+</main>
+
+<template id="todo-item">
+    <div class="task-left">
+        <input type="checkbox" name="task" id="task">
+        <label for="task"></label>
+    </div>
+    <div class="task-control">
+        <p class="duedate"></p>
+        <img src="/images/pencil.png" alt="edit">
+        <img src="/images/flag.png" alt="priority">
+        <img src="/images/delete.png" alt="delete">
+    </div>
+</template>
+
+
+<template id="create-todo">
+    <div>New task</div>
+    <form>
+        <label for="title">Title:</label>
+        <input type="text" id="title" required>
+        <label for="description">Description:</label>
+        <input type="text" id="description" required>
+        <label for="duedate">Due Date:</label>
+        <input type="date" id="duedate">
+        <label for="priority">Priority:</label>
+        <select name="priority" id="priority">
+            <option value="low">Low</option>
+            <option value="medium">Medium</option>
+            <option value="high">High</option>
+        </select>
+        <label for="project">Project:</label>
+        <select name="project" id="project">
+
+        </select>
+
+    </form>
+</template>
+<script type="module" src="/src/main.ts"></script>
+</body>
+</html>

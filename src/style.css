@@ -1,0 +1,87 @@
+:root {
+    --header-bg-color: #0369a1;
+    --sidebar-bg-color: #f0f9ff;
+    --highlight-shadow-color: #0284c7
+}
+
+body {
+    font-family: 'Dosis', sans-serif;
+    font-size: 16px;
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    font-family: 'Square Peg', cursive;
+    font-size: 2rem;
+    background-color: var(--header-bg-color);
+    color: whitesmoke;
+    display: flex;
+}
+
+.logo {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 1rem;
+}
+
+.logo-img {
+    width: 35px;
+    height: 35px;
+    padding-left: 1rem;
+}
+
+.logo > p {
+    margin: 0;
+    padding: 0.25rem 0;
+}
+
+main {
+    display: grid;
+    grid-template-columns: 1fr 5fr;
+    grid-template-rows: 100vh;
+
+}
+
+.sidebar {
+    font-size: 1rem;
+    background-color: var(--sidebar-bg-color);
+    padding: 1rem;
+}
+
+ul {
+    padding: 0;
+    margin: 0;
+}
+
+li {
+    list-style-type: none;
+    padding: 0.75rem;
+}
+
+button {
+    color: whitesmoke;
+    border-radius: 50%;
+    font-size: 2.5rem;
+    bottom: 1rem;
+    right: 1rem;
+    position: fixed;
+    border: none;
+    background: linear-gradient(135deg, var(--header-bg-color) 0%, var(--highlight-shadow-color) 100%);
+    width: 4rem;
+    height: 4rem;
+    transition: transform 0.2s;
+
+}
+
+button:hover {
+    transform: rotate(90deg) scale(1.25);
+    cursor: pointer;
+}
+
+#todo-item {
+    display: flex;
+    justify-content: space-between;
+}
+
