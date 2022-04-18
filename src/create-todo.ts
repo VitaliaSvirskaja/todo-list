@@ -14,6 +14,9 @@ function changeOverlay(string: "none" | "block") {
 function showOverlay() {
   changeOverlay("block");
 }
+function hideOverlay() {
+  changeOverlay("none");
+}
 
 export function createTodo() {
   const createBtn = document.querySelector(".createBtn");
@@ -21,7 +24,12 @@ export function createTodo() {
     dialog?.setAttribute("open", "");
     mainElement?.classList.add("blur");
     showOverlay();
-
     console.log("test");
   });
 }
+
+mainElement?.addEventListener("click", () => {
+  dialog?.removeAttribute("open");
+  mainElement?.classList.remove("blur");
+  hideOverlay();
+});
