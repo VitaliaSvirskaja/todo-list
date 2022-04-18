@@ -1,0 +1,30 @@
+
+.todo-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 0;
+    border-bottom: 1px solid lightgrey;
+}
+
+.dueDate {
+    margin: 0;
+}
+
+.task-control, .task-left {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+img {
+    width: 24px;
+    height: 24px;
+    border-radius: 5px;
+    padding: 0.25rem;
+}
+
+img:hover {
+    background-color: lightgrey;
+    cursor: pointer;
+}
