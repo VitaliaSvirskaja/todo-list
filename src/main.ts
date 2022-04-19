@@ -5,5 +5,5 @@ import { renderToDos } from "./render-todos";
 
 createToDoDialog();
 initializeNewToDo();
-const ToDos = getAllToDos();
-renderToDos(ToDos);
+const toDos = getAllToDos();
+renderToDos(toDos);

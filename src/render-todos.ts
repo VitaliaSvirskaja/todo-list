@@ -26,11 +26,15 @@ export function renderToDos(toDos: ToDo[]) {
         priorityIcon.src = "/images/flag-variant-outline-red.png";
         break;
     }
-    const deleteToDoIcon = outerToDoContainer.querySelector("#deleteIcon");
-    deleteToDoIcon?.addEventListener("click", () => {
-      deleteToDo(toDoIndex);
+    priorityIcon?.addEventListener("click", () => {
+      changePriority(toDoIndex);
     });
 
+    const deleteToDoIcon = outerToDoContainer.querySelector(".deleteIcon");
+    deleteToDoIcon?.addEventListener("click", () => {
+      console.log("aufgerufen");
+      deleteToDo(toDoIndex);
+    });
     contentContainer?.appendChild(outerToDoContainer);
   });
 }
@@ -38,6 +42,24 @@ export function renderToDos(toDos: ToDo[]) {
 export function deleteToDo(toDoIndex: number) {
   const toDos = getAllToDos();
   toDos.splice(toDoIndex, 1);
+  saveAllToDos(toDos);
+  renderToDos(toDos);
+}
+
+function changePriority(toDoIndex: number) {
+  const toDos = getAllToDos();
+  const toDo = toDos[toDoIndex];
+  switch (toDo.priority) {
+    case "low":
+      toDo.priority = "medium";
+      break;
+    case "medium":
+      toDo.priority = "high";
+      break;
+    case "high":
+      toDo.priority = "low";
+      break;
+  }
   saveAllToDos(toDos);
   renderToDos(toDos);
 }
