@@ -1,9 +1,9 @@
-import "./todo-items.css";
+import "./styles/todo-items.css";
 import { hideOverlay } from "./todo-dialog";
-import { ToDo } from "./todo-interface";
+import { ToDo } from "./interfaces/todo-interface";
 import { format } from "date-fns";
 import { renderToDos } from "./render-todos";
-import { Priority } from "./priority";
+import { Priority } from "./interfaces/priority";
 
 const overlay = document.querySelector("#overlay");
 

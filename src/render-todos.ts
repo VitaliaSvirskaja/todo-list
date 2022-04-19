@@ -1,4 +1,4 @@
-import { ToDo } from "./todo-interface";
+import { ToDo } from "./interfaces/todo-interface";
 import { getAllToDos, saveAllToDos } from "./create-new-todo";
 
 export function renderToDos(toDos: ToDo[]) {

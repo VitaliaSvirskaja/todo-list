@@ -1,7 +1,9 @@
-import "./todo-dialog.css";
+import "./styles/todo-dialog.css";
+import { clearField } from "./utils";
+import { closeNewProjectDialog } from "./create-new-project";
 
-const dialog = document.querySelector("dialog");
-const mainElement = document.querySelector("#overlay");
+const todoDialog = document.querySelector("#new-todo-dialog");
+const overlay = document.querySelector("#overlay");
 
 function changeOverlay(string: "none" | "block") {
   let overlay = document.getElementById("overlay");
@@ -16,14 +18,7 @@ export function showOverlay() {
 }
 export function hideOverlay() {
   changeOverlay("none");
-}
-
-function clearField(inputID: string) {
-  let inputElement = document.getElementById(inputID) as HTMLInputElement;
-  if (inputElement === null) {
-    return;
-  }
-  inputElement.value = "";
+  overlay?.classList.remove("blur");
 }
 
 function clearAllFields() {
@@ -36,15 +31,15 @@ export function createToDoDialog() {
   const createBtn = document.querySelector(".createBtn");
   createBtn?.addEventListener("click", () => {
     clearAllFields();
-    dialog?.setAttribute("open", "");
-    mainElement?.classList.add("blur");
+    todoDialog?.setAttribute("open", "");
+    overlay?.classList.add("blur");
     showOverlay();
     console.log("test");
   });
 }
 
-mainElement?.addEventListener("click", () => {
-  dialog?.removeAttribute("open");
-  mainElement?.classList.remove("blur");
+overlay?.addEventListener("click", () => {
+  todoDialog?.removeAttribute("open");
   hideOverlay();
+  closeNewProjectDialog();
 });
