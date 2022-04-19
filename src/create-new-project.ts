@@ -25,6 +25,7 @@ export function initializeNewProject() {
     const formData = new FormData(newProjectForm);
     createNewProject(String(formData.get("new-project")));
     closeNewProjectDialog();
+    renderProjects();
   });
 }
 
@@ -52,4 +53,15 @@ function getProjects(): Project[] {
 function saveProjects(projects: Project[]) {
   const stringifiedProjects = JSON.stringify(projects);
   localStorage.setItem("projects", stringifiedProjects);
+}
+
+export function renderProjects() {
+  const projectList = document.querySelector(".projectList");
+  projectList!.innerHTML = "";
+  const projects = getProjects();
+  projects.forEach((project) => {
+    const projectName = document.createElement("div");
+    projectName.innerHTML = project.name;
+    projectList?.appendChild(projectName);
+  });
 }

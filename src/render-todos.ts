@@ -1,5 +1,6 @@
 import { ToDo } from "./interfaces/todo-interface";
 import { getAllToDos, saveAllToDos } from "./create-new-todo";
+import { renderProjects } from "./create-new-project";
 
 export function renderToDos(toDos: ToDo[]) {
   const contentContainer = document.querySelector(".content-container");
@@ -32,11 +33,11 @@ export function renderToDos(toDos: ToDo[]) {
 
     const deleteToDoIcon = outerToDoContainer.querySelector(".deleteIcon");
     deleteToDoIcon?.addEventListener("click", () => {
-      console.log("aufgerufen");
       deleteToDo(toDoIndex);
     });
     contentContainer?.appendChild(outerToDoContainer);
   });
+  renderProjects();
 }
 
 export function deleteToDo(toDoIndex: number) {
