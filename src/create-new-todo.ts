@@ -5,10 +5,10 @@ import { format } from "date-fns";
 import { renderToDos } from "./render-todos";
 import { Priority } from "./priority";
 
-const mainElement = document.querySelector("#overlay");
+const overlay = document.querySelector("#overlay");
 
 export function initializeNewToDo() {
-  const form = document.querySelector("form");
+  const form = document.querySelector("#new-todo-form") as HTMLFormElement;
   form?.addEventListener("submit", () => {
     const formData = new FormData(form);
     const date: Date = new Date(String(formData.get("dueDate")));
@@ -20,7 +20,7 @@ export function initializeNewToDo() {
       project: String(formData.get("project")),
     };
     addAnotherToDo(newToDo);
-    mainElement?.classList.remove("blur");
+    overlay?.classList.remove("blur");
     hideOverlay();
   });
 }
