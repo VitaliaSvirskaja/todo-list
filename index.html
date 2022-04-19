@@ -38,7 +38,7 @@
     <div class="task-control">
         <p class="dueDate"></p>
         <img src="/images/pencil-outline.png" alt="edit" class="editIcon">
-        <img src="/images/flag-variant-outline.png" alt="priority" class="priorityIcon">
+        <img src="" alt="priority" class="priorityIcon">
         <img src="/images/trash-can-outline.png" alt="delete" class="deleteIcon">
     </div>
 </template>
@@ -56,10 +56,11 @@
 
 
            <label for="dueDate">Due Date:</label>
-           <input type="date" id="dueDate" name="dueDate">
+           <input type="date" id="dueDate" name="dueDate" required>
 
             <label for="priority">Priority:</label>
             <select name="priority" id="priority">
+                <option value="default" selected disabled>Choose a priority</option>
                 <option value="low">Low</option>
                 <option value="medium">Medium</option>
                 <option value="high">High</option>
@@ -67,7 +68,7 @@
 
           <label for="project">Project:</label>
           <select name="project" id="project">
-              <option value="default" selected>Choose a project</option>
+              <option value="default" selected disabled>Choose a project</option>
               <option value="today">Today</option>
           </select>
 

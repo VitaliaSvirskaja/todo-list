@@ -3,6 +3,7 @@ import { hideOverlay } from "./todo-dialog";
 import { ToDo } from "./todo-interface";
 import { format } from "date-fns";
 import { renderToDos } from "./render-todos";
+import { Priority } from "./priority";
 
 const mainElement = document.querySelector("#overlay");
 
@@ -15,7 +16,7 @@ export function initializeNewToDo() {
       title: String(formData.get("title")),
       description: String(formData.get("description")),
       dueDate: format(date, "yyyy.MM.dd"),
-      priority: formData.get("priority") as "low" | "medium" | "high",
+      priority: formData.get("priority") as Priority,
       project: String(formData.get("project")),
     };
     addAnotherToDo(newToDo);

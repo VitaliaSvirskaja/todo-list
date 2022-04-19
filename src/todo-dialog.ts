@@ -18,9 +18,24 @@ export function hideOverlay() {
   changeOverlay("none");
 }
 
+function clearField(inputID: string) {
+  let inputElement = document.getElementById(inputID) as HTMLInputElement;
+  if (inputElement === null) {
+    return;
+  }
+  inputElement.value = "";
+}
+
+function clearAllFields() {
+  clearField("title");
+  clearField("description");
+  clearField("dueDate");
+}
+
 export function createToDoDialog() {
   const createBtn = document.querySelector(".createBtn");
   createBtn?.addEventListener("click", () => {
+    clearAllFields();
     dialog?.setAttribute("open", "");
     mainElement?.classList.add("blur");
     showOverlay();
