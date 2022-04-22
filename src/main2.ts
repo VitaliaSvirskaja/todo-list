@@ -220,7 +220,6 @@ function deleteToDo(toDoIndex: number) {
   saveAllToDos(toDos);
   renderToDos(toDos);
 }
-
 function changePriority(toDoIndex: number) {
   const toDos = getToDosFromProject();
   const toDo = toDos[toDoIndex];
