@@ -30,6 +30,9 @@ let dialogType: DialogType = "create";
 // TODO: event listener, welche den Wert des selektierten Projekts ändern
 let selectedProject: string | null = null;
 
+const toDos = getToDosFromProject();
+renderToDos(toDos);
+
 // EVENT LISTENER
 openNewProjectDialogBtn?.addEventListener("click", () => {
   openProjectDialog();
@@ -55,9 +58,8 @@ form?.addEventListener("submit", () => {
   };
   if (dialogType === "create") {
     addAnotherToDo(newToDo);
-    overlay?.classList.remove("blur");
   } else {
-    const allToDos = getAllToDos();
+    const allToDos = getToDosFromProject();
 
     saveAllToDos(allToDos);
   }
@@ -71,12 +73,12 @@ overlay?.addEventListener("click", () => {
 });
 createBtn?.addEventListener("click", () => {
   dialogType = "create";
+  resetToDoForm();
   openTodoDialog();
 });
 
 // FUNCTIONS
 function openTodoDialog() {
-  clearAllFields();
   todoDialog?.setAttribute("open", "");
   overlay?.classList.add("blur");
   showOverlay();
@@ -98,9 +100,9 @@ function editTodo(todo: ToDo, index: number) {
   // TODO: Implement
 }
 
-function addAnotherToDo(ToDo: ToDo) {
-  const allToDos = getAllToDos();
-  allToDos.push(ToDo);
+function addAnotherToDo(todo: ToDo) {
+  const allToDos = getToDosFromProject();
+  allToDos.push(todo);
   saveAllToDos(allToDos);
   renderToDos(allToDos);
 }
@@ -133,6 +135,22 @@ function renderProjects() {
     const projectName = document.createElement("div");
     projectName.innerHTML = project.name;
     projectList?.appendChild(projectName);
+  });
+  updateProjectSelection(projects);
+}
+
+function updateProjectSelection(projects: Project[]) {
+  const projectSelection = document.querySelector("#project");
+  projectSelection!.innerHTML = "";
+  const defaultOption = document.createElement("option");
+  defaultOption.value = "default";
+  defaultOption.innerHTML = "Choose a project";
+  projectSelection?.appendChild(defaultOption);
+  projects.forEach((project) => {
+    const projectOption = document.createElement("option");
+    projectOption.value = project.name;
+    projectOption.innerHTML = project.name;
+    projectSelection?.appendChild(projectOption);
   });
 }
 
@@ -172,6 +190,8 @@ function renderToDos(toDos: ToDo[]) {
     const editIcon = outerToDoContainer?.querySelector(".editIcon");
     editIcon?.addEventListener("click", () => {
       dialogType = "edit";
+      fillInputs(toDo);
+      openTodoDialog();
     });
 
     contentContainer?.appendChild(outerToDoContainer);
@@ -179,15 +199,30 @@ function renderToDos(toDos: ToDo[]) {
   renderProjects();
 }
 
+function fillInputs(toDo: ToDo) {
+  const titleInput = document.querySelector("#title") as HTMLInputElement;
+  titleInput.value = toDo.title;
+  const descriptionInput = document.querySelector(
+    "#description"
+  ) as HTMLInputElement;
+  descriptionInput.value = toDo.description;
+  const dueDateInput = document.querySelector("#dueDate") as HTMLInputElement;
+  dueDateInput.value = toDo.dueDate;
+  const priorityInput = document.querySelector("#priority") as HTMLInputElement;
+  priorityInput.value = toDo.priority;
+  const projectInput = document.querySelector("#project") as HTMLInputElement;
+  projectInput.value = toDo.project;
+}
+
 function deleteToDo(toDoIndex: number) {
-  const toDos = getAllToDos();
+  const toDos = getToDosFromProject();
   toDos.splice(toDoIndex, 1);
   saveAllToDos(toDos);
   renderToDos(toDos);
 }
 
 function changePriority(toDoIndex: number) {
-  const toDos = getAllToDos();
+  const toDos = getToDosFromProject();
   const toDo = toDos[toDoIndex];
   switch (toDo.priority) {
     case "low":
@@ -220,16 +255,24 @@ function hideOverlay() {
   overlay?.classList.remove("blur");
 }
 
-function clearAllFields() {
+function resetToDoForm() {
   clearField("title");
   clearField("description");
   clearField("dueDate");
+  let prioritySelection = document.querySelector(
+    "#priority"
+  ) as HTMLSelectElement;
+  prioritySelection.value = "default";
+  let projectSelection = document.querySelector(
+    "#project"
+  ) as HTMLSelectElement;
+  projectSelection.value = "default";
 }
 
-function getAllToDos() {
+function getToDosFromProject() {
   const stringifiedTodos = localStorage.getItem("todos");
-  const todos: ToDo[] = JSON.parse(stringifiedTodos!);
-  // TODO: filter nach Projekt
+  const todos: ToDo[] = JSON.parse(stringifiedTodos ?? "[]");
+  todos.filter((todo) => todo.project === selectedProject);
   return todos;
 }
 
