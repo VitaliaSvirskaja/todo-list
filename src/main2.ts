@@ -1,4 +1,5 @@
 import { format } from "date-fns";
+import { v4 as uuidV4 } from "uuid";
 
 import { clearField } from "./utils";
 
@@ -29,9 +30,9 @@ const createBtn = document.querySelector(".createBtn");
 let dialogType: DialogType = "create";
 // TODO: event listener, welche den Wert des selektierten Projekts ändern
 let selectedProject: string | null = null;
-let selectedtoDoIndex: number | null = null;
+let selectedtoDoID: string | null = null;
 
-const toDos = getToDosFromProject();
+const toDos = getAllToDos();
 renderToDos(toDos);
 
 // EVENT LISTENER
@@ -51,6 +52,7 @@ form?.addEventListener("submit", () => {
   const formData = new FormData(form);
   const date: Date = new Date(String(formData.get("dueDate")));
   const toDo: ToDo = {
+    id: uuidV4(),
     title: String(formData.get("title")),
     description: String(formData.get("description")),
     dueDate: format(date, "yyyy-MM-dd"),
@@ -60,7 +62,7 @@ form?.addEventListener("submit", () => {
   if (dialogType === "create") {
     addAnotherToDo(toDo);
   } else {
-    editTodo(toDo, selectedtoDoIndex);
+    editTodo(toDo, selectedtoDoID);
   }
   hideOverlay();
 });
@@ -77,12 +79,15 @@ createBtn?.addEventListener("click", () => {
 });
 
 // FUNCTIONS
-function editTodo(editedToDo: ToDo, index: number | null) {
-  if (index === null) {
+function editTodo(editedToDo: ToDo, toDoId: string | null) {
+  if (toDoId === null) {
     return;
   }
-  const allToDos = getToDosFromProject();
-  allToDos[index] = editedToDo;
+  const allToDos = getAllToDos();
+  const indexOfToDoToBeEdited = allToDos.findIndex((toDo) => {
+    return toDo.id === toDoId;
+  });
+  allToDos[indexOfToDoToBeEdited] = editedToDo;
   saveAllToDos(allToDos);
   renderToDos(allToDos);
 }
@@ -106,7 +111,7 @@ function closeNewProjectDialog() {
 }
 
 function addAnotherToDo(todo: ToDo) {
-  const allToDos = getToDosFromProject();
+  const allToDos = getAllToDos();
   allToDos.push(todo);
   saveAllToDos(allToDos);
   renderToDos(allToDos);
@@ -138,7 +143,13 @@ function renderProjects() {
   const projects = getProjects();
   projects.forEach((project) => {
     const projectName = document.createElement("div");
+    projectName.classList.add("project");
     projectName.innerHTML = project.name;
+    projectName?.addEventListener("click", () => {
+      selectedProject = projectName.innerHTML;
+      console.log(selectedProject);
+      renderToDos(getAllToDos());
+    });
     projectList?.appendChild(projectName);
   });
   updateProjectSelection(projects);
@@ -161,12 +172,15 @@ function updateProjectSelection(projects: Project[]) {
 }
 
 function renderToDos(toDos: ToDo[]) {
+  const selectedToDos = toDos.filter(
+    (todo) => todo.project === selectedProject
+  );
   const contentContainer = document.querySelector(".content-container");
   contentContainer!.innerHTML = "";
   const toDoTemplate = document.querySelector(
     "#todo-item"
   ) as HTMLTemplateElement;
-  toDos.forEach((toDo, toDoIndex) => {
+  selectedToDos.forEach((toDo) => {
     const outerToDoContainer = document.createElement("div");
     outerToDoContainer.classList.add("todo-item");
     outerToDoContainer.appendChild(toDoTemplate.content.cloneNode(true));
@@ -186,17 +200,17 @@ function renderToDos(toDos: ToDo[]) {
         break;
     }
     priorityIcon?.addEventListener("click", () => {
-      changePriority(toDoIndex);
+      changePriority(toDo.id);
     });
 
     const deleteToDoIcon = outerToDoContainer.querySelector(".deleteIcon");
     deleteToDoIcon?.addEventListener("click", () => {
-      deleteToDo(toDoIndex);
+      deleteToDo(toDo.id);
     });
     const editIcon = outerToDoContainer?.querySelector(".editIcon");
     editIcon?.addEventListener("click", () => {
       dialogType = "edit";
-      selectedtoDoIndex = toDoIndex;
+      selectedtoDoID = toDo.id;
       fillInputs(toDo);
       openTodoDialog();
     });
@@ -221,25 +235,32 @@ function fillInputs(toDo: ToDo) {
   projectInput.value = toDo.project;
 }
 
-function deleteToDo(toDoIndex: number) {
-  const toDos = getToDosFromProject();
-  toDos.splice(toDoIndex, 1);
-  saveAllToDos(toDos);
-  renderToDos(toDos);
+function deleteToDo(toDoId: string) {
+  const toDos = getAllToDos();
+  const toDoToBeDeleted = toDos.filter((toDo) => {
+    return toDo.id !== toDoId;
+  });
+  saveAllToDos(toDoToBeDeleted);
+  renderToDos(toDoToBeDeleted);
 }
 
-function changePriority(toDoIndex: number) {
-  const toDos = getToDosFromProject();
-  const toDo = toDos[toDoIndex];
-  switch (toDo.priority) {
+function changePriority(toDoId: string) {
+  const toDos = getAllToDos();
+  const toDoToBeChanged = toDos.find((todo) => {
+    return todo.id === toDoId;
+  });
+  if (toDoToBeChanged === undefined) {
+    return;
+  }
+  switch (toDoToBeChanged.priority) {
     case "low":
-      toDo.priority = "medium";
+      toDoToBeChanged.priority = "medium";
       break;
     case "medium":
-      toDo.priority = "high";
+      toDoToBeChanged.priority = "high";
       break;
     case "high":
-      toDo.priority = "low";
+      toDoToBeChanged.priority = "low";
       break;
   }
   saveAllToDos(toDos);
@@ -277,12 +298,26 @@ function resetToDoForm() {
   projectSelection.value = "default";
 }
 
-function getToDosFromProject() {
-  const stringifiedTodos = localStorage.getItem("todos");
-  const todos: ToDo[] = JSON.parse(stringifiedTodos ?? "[]");
-  todos.filter((todo) => todo.project === selectedProject);
-  return todos;
+// function getToDosFromProject() {
+//   const stringifiedTodos = localStorage.getItem("todos");
+//   const todos: ToDo[] = JSON.parse(stringifiedTodos ?? "[]");
+//   const selectedToDos = todos.filter(
+//     (todo) => todo.project === selectedProject
+//   );
+//   console.table(selectedToDos);
+//   return selectedToDos;
+// }
+
+function getAllToDos(): ToDo[] {
+  const stringifiedToDos = localStorage.getItem("todos");
+  const toDos: ToDo[] = JSON.parse(stringifiedToDos ?? "[]");
+  return toDos;
 }
+
+// function showToDosofProject() {
+//   const todos = getToDosFromProject();
+//   renderToDos(todos);
+// }
 
 function saveAllToDos(todos: ToDo[]) {
   const stringifiedTodos = JSON.stringify(todos);
