@@ -1,12 +1,13 @@
 :root {
     --header-bg-color: #0369a1;
     --sidebar-bg-color: #f0f9ff;
+    --sidebar-hover-color: #e0f2fe;
     --highlight-shadow-color: #0284c7
 }
 
 body {
     font-family: 'Dosis', sans-serif;
-    font-size: 16px;
+    font-size: 20px;
     margin: 0;
     padding: 0;
 }
@@ -45,7 +46,7 @@ main {
 }
 
 .sidebar {
-    font-size: 1rem;
+
     background-color: var(--sidebar-bg-color);
     padding: 1rem;
 }
@@ -58,6 +59,20 @@ ul {
 li {
     list-style-type: none;
     padding: 0.75rem;
+
+}
+
+ul>div {
+    padding-left: 1.25rem ;
+}
+
+ul>div>div {
+    padding: 0.5rem;
+    font-size: 1rem;
+}
+ul>div>div:hover {
+    cursor: pointer;
+    background-color: var(--sidebar-hover-color);
 }
 
 .createBtn {
@@ -83,4 +98,15 @@ li {
 
 .content-container {
     padding: 2rem 4rem;
+}
+
+
+#open-new-project-dialog {
+    margin-top: 1.25rem;
+    margin-left: 1.25rem;
+    padding: 0.75rem;
+    border-radius: 25px;
+    background-color: var(--highlight-shadow-color);
+    color: whitesmoke;
+    font-weight: bold;
 }
