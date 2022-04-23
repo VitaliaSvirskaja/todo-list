@@ -29,6 +29,7 @@ const createBtn = document.querySelector(".createBtn");
 let dialogType: DialogType = "create";
 // TODO: event listener, welche den Wert des selektierten Projekts ändern
 let selectedProject: string | null = null;
+let selectedtoDoIndex: number | null = null;
 
 const toDos = getToDosFromProject();
 renderToDos(toDos);
@@ -49,7 +50,7 @@ newProjectForm.addEventListener("submit", () => {
 form?.addEventListener("submit", () => {
   const formData = new FormData(form);
   const date: Date = new Date(String(formData.get("dueDate")));
-  const newToDo: ToDo = {
+  const toDo: ToDo = {
     title: String(formData.get("title")),
     description: String(formData.get("description")),
     dueDate: format(date, "yyyy-MM-dd"),
@@ -57,11 +58,9 @@ form?.addEventListener("submit", () => {
     project: String(formData.get("project")),
   };
   if (dialogType === "create") {
-    addAnotherToDo(newToDo);
+    addAnotherToDo(toDo);
   } else {
-    const allToDos = getToDosFromProject();
-
-    saveAllToDos(allToDos);
+    editTodo(toDo, selectedtoDoIndex);
   }
   hideOverlay();
 });
@@ -78,6 +77,16 @@ createBtn?.addEventListener("click", () => {
 });
 
 // FUNCTIONS
+function editTodo(editedToDo: ToDo, index: number | null) {
+  if (index === null) {
+    return;
+  }
+  const allToDos = getToDosFromProject();
+  allToDos[index] = editedToDo;
+  saveAllToDos(allToDos);
+  renderToDos(allToDos);
+}
+
 function openTodoDialog() {
   todoDialog?.setAttribute("open", "");
   overlay?.classList.add("blur");
@@ -94,10 +103,6 @@ function closeNewProjectDialog() {
   projectDialog?.removeAttribute("open");
   hideOverlay();
   clearField("new-project");
-}
-
-function editTodo(todo: ToDo, index: number) {
-  // TODO: Implement
 }
 
 function addAnotherToDo(todo: ToDo) {
@@ -145,6 +150,7 @@ function updateProjectSelection(projects: Project[]) {
   const defaultOption = document.createElement("option");
   defaultOption.value = "default";
   defaultOption.innerHTML = "Choose a project";
+  defaultOption.setAttribute("disabled", "");
   projectSelection?.appendChild(defaultOption);
   projects.forEach((project) => {
     const projectOption = document.createElement("option");
@@ -190,6 +196,7 @@ function renderToDos(toDos: ToDo[]) {
     const editIcon = outerToDoContainer?.querySelector(".editIcon");
     editIcon?.addEventListener("click", () => {
       dialogType = "edit";
+      selectedtoDoIndex = toDoIndex;
       fillInputs(toDo);
       openTodoDialog();
     });
@@ -220,6 +227,7 @@ function deleteToDo(toDoIndex: number) {
   saveAllToDos(toDos);
   renderToDos(toDos);
 }
+
 function changePriority(toDoIndex: number) {
   const toDos = getToDosFromProject();
   const toDo = toDos[toDoIndex];
@@ -249,6 +257,7 @@ function changeOverlay(string: "none" | "block") {
 function showOverlay() {
   changeOverlay("block");
 }
+
 function hideOverlay() {
   changeOverlay("none");
   overlay?.classList.remove("blur");
