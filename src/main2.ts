@@ -28,7 +28,6 @@ const createBtn = document.querySelector(".createBtn");
 
 // VARIABLES
 let dialogType: DialogType = "create";
-// TODO: event listener, welche den Wert des selektierten Projekts ändern
 let selectedProject: string | null = null;
 let selectedtoDoID: string | null = null;
 
@@ -58,6 +57,7 @@ form?.addEventListener("submit", () => {
     dueDate: format(date, "yyyy-MM-dd"),
     priority: formData.get("priority") as Priority,
     project: String(formData.get("project")),
+    done: false,
   };
   if (dialogType === "create") {
     addAnotherToDo(toDo);
@@ -215,9 +215,37 @@ function renderToDos(toDos: ToDo[]) {
       openTodoDialog();
     });
 
+    const checkboxToDo = outerToDoContainer.querySelector(
+      ".checkbox"
+    ) as HTMLInputElement;
+    checkboxToDo?.addEventListener("click", () => switchDoneState(toDo.id));
+
+    const task = outerToDoContainer.querySelector(".task") as HTMLLabelElement;
+    if (toDo.done) {
+      checkboxToDo.setAttribute("checked", "");
+      task.style.textDecoration = "line-through";
+    } else {
+      checkboxToDo.removeAttribute("checked");
+      task.style.textDecoration = "none";
+    }
+
     contentContainer?.appendChild(outerToDoContainer);
   });
   renderProjects();
+}
+
+function switchDoneState(toDoID: string) {
+  const allToDos = getAllToDos();
+  let toDoToBeMarkedDone = allToDos.find((todo) => {
+    return todo.id === toDoID;
+  });
+  if (toDoToBeMarkedDone === undefined) {
+    return;
+  }
+  toDoToBeMarkedDone.done = !toDoToBeMarkedDone.done;
+
+  saveAllToDos(allToDos);
+  renderToDos(allToDos);
 }
 
 function fillInputs(toDo: ToDo) {
@@ -297,16 +325,6 @@ function resetToDoForm() {
   ) as HTMLSelectElement;
   projectSelection.value = "default";
 }
-
-// function getToDosFromProject() {
-//   const stringifiedTodos = localStorage.getItem("todos");
-//   const todos: ToDo[] = JSON.parse(stringifiedTodos ?? "[]");
-//   const selectedToDos = todos.filter(
-//     (todo) => todo.project === selectedProject
-//   );
-//   console.table(selectedToDos);
-//   return selectedToDos;
-// }
 
 function getAllToDos(): ToDo[] {
   const stringifiedToDos = localStorage.getItem("todos");

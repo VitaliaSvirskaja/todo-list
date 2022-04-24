@@ -5,4 +5,5 @@ export interface ToDo {
   dueDate: string;
   priority: "low" | "medium" | "high";
   project: string;
+  done: boolean;
 }
