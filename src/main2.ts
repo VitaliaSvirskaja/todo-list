@@ -1,4 +1,4 @@
-import { format } from "date-fns";
+import { format, isBefore, isSameDay } from "date-fns";
 import { v4 as uuidV4 } from "uuid";
 
 import { clearField } from "./utils";
@@ -30,9 +30,9 @@ const createBtn = document.querySelector(".createBtn");
 let dialogType: DialogType = "create";
 let selectedProject: string | null = null;
 let selectedtoDoID: string | null = null;
+let chosenSite: "inbox" | "project" | "today" = "inbox";
 
-const toDos = getAllToDos();
-renderToDos(toDos);
+renderToDos(getAllToDos());
 
 // EVENT LISTENER
 openNewProjectDialogBtn?.addEventListener("click", () => {
@@ -76,6 +76,18 @@ createBtn?.addEventListener("click", () => {
   dialogType = "create";
   resetToDoForm();
   openTodoDialog();
+});
+
+const inbox = document.querySelector("#inboxbtn");
+inbox?.addEventListener("click", () => {
+  chosenSite = "inbox";
+  renderToDos(getAllToDos());
+});
+
+const today = document.querySelector("#todaybtn");
+today?.addEventListener("click", () => {
+  chosenSite = "today";
+  renderToDos(getAllToDos());
 });
 
 // FUNCTIONS
@@ -147,6 +159,7 @@ function renderProjects() {
     projectName.innerHTML = project.name;
     projectName?.addEventListener("click", () => {
       selectedProject = projectName.innerHTML;
+      chosenSite = "project";
       console.log(selectedProject);
       renderToDos(getAllToDos());
     });
@@ -171,16 +184,30 @@ function updateProjectSelection(projects: Project[]) {
   });
 }
 
-function renderToDos(toDos: ToDo[]) {
-  const selectedToDos = toDos.filter(
-    (todo) => todo.project === selectedProject
+function filterToDos(toDos: ToDo[]): ToDo[] {
+  if (chosenSite === "inbox") {
+    return toDos;
+  }
+  if (chosenSite === "project") {
+    return toDos.filter((todo) => todo.project === selectedProject);
+  }
+  const today = new Date();
+
+  return toDos.filter(
+    (todo) =>
+      isSameDay(today, new Date(todo.dueDate)) ||
+      isBefore(new Date(todo.dueDate), today)
   );
+}
+
+function renderToDos(toDos: ToDo[]) {
+  const filteredToDos = filterToDos(toDos);
   const contentContainer = document.querySelector(".content-container");
   contentContainer!.innerHTML = "";
   const toDoTemplate = document.querySelector(
     "#todo-item"
   ) as HTMLTemplateElement;
-  selectedToDos.forEach((toDo) => {
+  filteredToDos.forEach((toDo) => {
     const outerToDoContainer = document.createElement("div");
     outerToDoContainer.classList.add("todo-item");
     outerToDoContainer.appendChild(toDoTemplate.content.cloneNode(true));

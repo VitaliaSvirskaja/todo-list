@@ -62,6 +62,11 @@ li {
 
 }
 
+li:hover {
+    cursor: pointer;
+    background-color: var(--sidebar-hover-color);
+}
+
 ul>div {
     padding-left: 1.25rem ;
 }
@@ -109,4 +114,8 @@ ul>div>div:hover {
     background-color: var(--highlight-shadow-color);
     color: whitesmoke;
     font-weight: bold;
+}
+
+#open-new-project-dialog:hover {
+    cursor: pointer;
 }
